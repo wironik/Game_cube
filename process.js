@@ -182,17 +182,16 @@ function pause()
 	document.removeEventListener('keydown', gameStrategy);
 	document.removeEventListener('keydown', labirynthStrategy);
 }
-
+//!!!возобновить игру
 function resumeGame()
 {
 	
 }
-
+//!!!возобновить лабиринт
 function resumeLabitynth()
 {
 	
 }
-//!!!досюда, этот блок
 //поиск куба, в котором находится игрок
 function getCube(x,y,w,h)
 {

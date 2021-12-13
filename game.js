@@ -2,7 +2,6 @@
 function startGame()
 {
 	start();
-
 	//создаем кубы
 	createGameCubes();
 	//создаем двери
@@ -24,6 +23,7 @@ function swapGame()
 	swap();
 	refreshGame();
 }
+//функция, которая выполняется после прохождения лабиринта
 function finishGame()
 {
 	document.getElementById('finish').style.display='block';
@@ -46,7 +46,6 @@ function gameStrategy()
 	processKey(event);
 	refreshGame();
 }
-
 //обновление кадра в игре
 function refreshGame()
 {
@@ -78,7 +77,6 @@ function refreshGame()
 		finishGame();
 	}
 }
-
 //отрисовка отдельного куба
 function drawCube()
 {

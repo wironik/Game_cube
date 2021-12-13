@@ -16,9 +16,8 @@ function startLabitynth()
 	document.addEventListener('keydown', labirynthStrategy);
 	
 	//задаем интервал для обработки события перемещения через заданное время в настройках
-	interval = setInterval(swapLabirynth,settings.swapInterval);
+	interval = setInterval(swapLabirynth,settings.swapHardInterval);
 }
-
 //лабиринт - кнопка меню
 function startHardLabitynth()
 {
@@ -39,7 +38,6 @@ function startHardLabitynth()
 	//задаем интервал для обработки события перемещения через заданное время в настройках
 	interval = setInterval(swapLabirynth,settings.swapInterval);
 }
-
 //функция, необходимая для перемещения куба, в котором находится игрок и отрисовки изменения кадра
 function swapLabirynth()
 {
@@ -62,14 +60,12 @@ function finishLabirynth()
 	document.removeEventListener('keydown', labirynthStrategy);
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
-
 //задаем стратегию, методы для лабиринта которые будут выполняться при нажатии клавиши
 function labirynthStrategy()
 {
 	processKey(event);
 	refreshLabirynth();
 }
-
 //обновление кадра в лабиринте
 function refreshLabirynth()
 {

@@ -39,7 +39,8 @@ function createCubes()
 	}
 	createFinishCube();
 }
-
+//!!!функция, над которой нужно будет поработать (на данный момент ничем не отличается от обычной генерации)
+//создание кубов для слепого лабиринта
 function createGameCubes()
 {
 	for(var i=0;i<settings.countCubes;i++)//столбцы
@@ -78,6 +79,7 @@ function createGameCubes()
 	//создание финишного куба
 	createFinishCube();
 }
+//поиск подходящего финишного куба и создание его
 function createFinishCube()
 {
 	//создание финишного куба
@@ -122,7 +124,6 @@ function createFinishCube()
 	//map.cubes[settings.countCubes-1][settings.countCubes-1].stat="finish";
 	map.cubes[randi][randj].stat="finish";
 }
-
 //создание дверей - сложный уровень
 function createHardDoors()
 {
@@ -363,8 +364,6 @@ function createDoors()
 		}
 	}
 }
-
-
 //создание стен
 function createWalls()
 {
