@@ -1,3 +1,58 @@
+//счетчик времени
+function updateTime()
+{
+    sec++;
+    if (sec >= 60) 
+	{ //задаем числовые параметры, меняющиеся по ходу работы программы
+        min++;
+        sec = sec - 60;
+    }
+    if (min >= 60) 
+	{
+        hour++;
+        min = min - 60;
+    }
+    visualTime('time');
+	//console.log(hour,min,sec);
+}
+//отображение времени на любом из элементов html в формате hh:mm:ss
+function visualTime(id)
+{
+	if (sec < 10) 
+	{ 
+        if (min < 10) 
+		{
+            if (hour < 10) 
+                document.getElementById(id).innerHTML ='Время: 0' + hour + ':0' + min + ':0' + sec;
+			else 
+                document.getElementById(id).innerHTML ='Время: ' + hour + ':0' + min + ':0' + sec;
+		}
+		else 
+		{
+            if (hour < 10) 
+                document.getElementById(id).innerHTML = 'Время: 0' + hour + ':' + min + ':0' + sec;
+			else 
+                document.getElementById(id).innerHTML = 'Время: ' + hour + ':' + min + ':0' + sec;
+        }
+    } 
+	else 
+	{
+        if (min < 10) 
+		{
+            if (hour < 10) 
+                document.getElementById(id).innerHTML = 'Время: 0' + hour + ':0' + min + ':' + sec;
+			else 
+                document.getElementById(id).innerHTML = 'Время: ' + hour + ':0' + min + ':' + sec;
+        } 
+		else 
+		{
+            if (hour < 10) 
+                document.getElementById(id).innerHTML = 'Время: 0' + hour + ':' + min + ':' + sec;
+			else 
+                document.getElementById(id).innerHTML = 'Время: ' + hour + ':' + min + ':' + sec;
+        }
+    }
+}
 // Обработка нажатия кнопок
 function processKey(e) 
 {
@@ -48,6 +103,11 @@ function menu()
 	ctx.clearRect(0, 0, map.width, map.height);
 	document.getElementById('menu').style.display='block';
 	clearInterval(interval);
+	clearInterval(timer);
+	sec=0;
+	min=0;
+	hour=0;
+	document.getElementById('time').innerHTML ='Время: 00:00:00';
 	document.removeEventListener('keydown', gameStrategy);
 	document.removeEventListener('keydown', labirynthStrategy);
 }
@@ -74,7 +134,6 @@ function getCube(x,y,w,h)
 	}
 }
 
-//!!!в планах: добавить функцию, которая будет отрисовывать картинку и прочие элементы на холсте для игрока, 
 function checkCollision(cube)
 {	//проверка столкновений
 	//!!! добавить изменение dx , чтобы примыкать к стене вплотную, если столкновение true

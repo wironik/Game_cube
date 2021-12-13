@@ -20,24 +20,29 @@
 			<p>F1 - Help</p>
 			<p>ESC - Menu</p>
 		</div>
+		<div class="timer">
+			<p id="time">Время: 00:00:00</p>
+		</div>
 		<!-- игровое поле -->
 		<div class="game">
 			<canvas id="canvas">
 			</canvas>
 			<!--<canvas id="player"></canvas>-->
 		</div>
+		
 		<!--всплывающее меню-->
 		<div id="menu" class="menu">
 			<h1> Куб </h1>
 			<input type="button" value="Начать игру" onclick="startGame()" ></input>
 			<input type="button" value="Пройти лабиринт" onclick="startLabitynth()" ></input>
-			<input type="button" value="Как играть" onclick="help()" ></input>
+			<input type="button" value="Как играть - F1" onclick="help()" ></input>
 		</div>
 		<div id="finish" class="finish">
 			<h1> Вы прошли! </h1>
+			<p id="finishTime"></p>
 			<input type="button" value="Начать игру" onclick="startGame()" ></input>
 			<input type="button" value="Пройти лабиринт" onclick="startLabitynth()" ></input>
-			<input type="button" value="Как играть" onclick="help()" ></input>
+			<input type="button" value="Как играть - F1" onclick="help()" ></input>
 		</div>
 		<div id="help" class="help">
 			<p>Цель игры: Пройти лабиринт. Лабиринт будет пройден в случае, если попасть в куб с белым малым кубом внутри</p>

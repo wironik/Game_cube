@@ -28,51 +28,7 @@ function createCubes()
 			map.cubes[i][j].wallColor=wallCol;
 		}
 	}
-	//создание финишного куба
-	//задаем рандом индексы
-	var randi=Math.round(0 - 0.5 + Math.random() * (settings.countCubes-1 + 1 - 0));
-	var randj=Math.round(0 - 0.5 + Math.random() * (settings.countCubes-1 + 1 - 0));
-	console.log("rand:",randi,randj);
-	//переменная ошибки
-	var stop=0;
-
-	var elem=[];
-	elem.push(randj-0);
-	elem.push(randi-0);
-	elem.push(settings.countCubes-1-randj);
-	elem.push(settings.countCubes-1-randi);
-	
-	var min = Math.min.apply(null, elem);
-	var index=0;
-	for (var i=0; i<elem.length; i++)
-	{
-		if (elem[i]==min)
-			index=i;
-	}
-	console.log(elem,min,index);
-	if (index==0)
-	{
-		while (randj>0)
-			randj--;
-	}
-	else if (index==1)
-	{
-		while (randi>0)
-			randi--;
-	}
-	else if (index==2)
-	{
-		while (randj<settings.countCubes-1)
-			randj++
-	}
-	else if (index==3)
-	{
-		while (randi<settings.countCubes-1)
-			randi++;
-	}
-	console.log("finish:",randi,randj);
-	//map.cubes[settings.countCubes-1][settings.countCubes-1].stat="finish";
-	map.cubes[randi][randj].stat="finish";
+	createFinishCube();
 }
 
 function createGameCubes()
@@ -105,7 +61,51 @@ function createGameCubes()
 		}
 	}
 	//создание финишного куба
-	map.cubes[settings.countCubes-1][settings.countCubes-1].stat="finish";
+	createFinishCube();
+}
+function createFinishCube()
+{
+	//создание финишного куба
+	//задаем рандом индексы
+	var randi=Math.round(0 - 0.5 + Math.random() * (settings.countCubes-1 + 1 - 0));
+	var randj=Math.round(0 - 0.5 + Math.random() * (settings.countCubes-1 + 1 - 0));
+
+	//считаем расстояние текущего расположения финиша с краями карты
+	var elem=[];
+	elem.push(randj-0);
+	elem.push(randi-0);
+	elem.push(settings.countCubes-1-randj);
+	elem.push(settings.countCubes-1-randi);
+	
+	var min = Math.min.apply(null, elem);
+	var index=0;
+	for (var i=0; i<elem.length; i++)
+	{
+		if (elem[i]==min)
+			index=i;
+	}
+	if (index==0)
+	{
+		while (randj>0)
+			randj--;
+	}
+	else if (index==1)
+	{
+		while (randi>0)
+			randi--;
+	}
+	else if (index==2)
+	{
+		while (randj<settings.countCubes-1)
+			randj++
+	}
+	else if (index==3)
+	{
+		while (randi<settings.countCubes-1)
+			randi++;
+	}
+	//map.cubes[settings.countCubes-1][settings.countCubes-1].stat="finish";
+	map.cubes[randi][randj].stat="finish";
 }
 
 //создание дверей

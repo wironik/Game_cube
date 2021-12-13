@@ -7,14 +7,21 @@ var ctx;
 //события
 var interval;
 
+//таймер
+var timer;
+
+var sec=0;
+var min=0;
+var hour=0;
+
 //настройки
 var settings =
 {
-	countCubes:17,
+	countCubes:23,
 	canvasWidth:document.documentElement.clientWidth*2,
 	canvasHeight:document.documentElement.clientHeight*2,
 	wallSize: 7,
-	swapInterval:25000
+	swapInterval:30000
 };
 
 //игрок

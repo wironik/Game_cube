@@ -40,15 +40,33 @@ function startLabitynth()
 	document.getElementById('menu').style.display='none';
 	
 	//задаем интервал для обработки события перемещения через заданное время в настройках
-	interval = setInterval(swap,settings.swapInterval);
+	interval = setInterval(swapLabirynth,settings.swapInterval);
+
+	timer = setInterval(updateTime, 1000);
+}
+//функция, необходимая для перемещения куба, в котором находится игрок и отрисовки изменения кадра
+function swapLabirynth()
+{
+	swap();
+	refreshLabirynth();
 }
 //конец игры
 function finishLabirynth()
 {
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	
 	document.getElementById('finish').style.display='block';
 	clearInterval(interval);
+	clearInterval(timer);
+	document.getElementById('time').innerHTML ='Время: 00:00:00';
+	//document.getElementById('finishTime').innerHTML ='Время: '+hour + ':0' + min + ':0' + sec;
+	visualTime('finishTime');
+	
+	sec=0;
+	min=0;
+	hour=0;
+	
 	document.removeEventListener('keydown', labirynthStrategy);
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
 //задаем стратегию, методы для лабиринта которые будут выполняться при нажатии клавиши
@@ -64,9 +82,6 @@ function refreshLabirynth()
 	// Обновляем кадр только если значок движется
 	if (user.dx != 0 || user.dy != 0) 
 	{
-		//стираем элемент с холста
-		ctx.clearRect(user.x, user.y, user.width, user.height);
-
 		// получаем текущий куб, в котором находится игрок для получения информации
 		var cube=getCube(user.centerx,user.centery);
 
@@ -83,15 +98,19 @@ function refreshLabirynth()
 			user.dx=0;
 			user.dy=0;
 		}
-		drawElements();
+		
 		
 		if (cube.stat=="finish")
 		{
 			finishLabirynth();
 		}
 	}
+	//стираем элемент с холста
+	ctx.clearRect(user.x, user.y, user.width, user.height);
+	//рисуем
+	drawElements();
 }
-
+//!!!в планах: добавить функцию, которая будет отрисовывать картинку и прочие элементы на холсте для игрока, 
 //!!!холсте для элементов, ака текстуры. все процессы в виде кубов будут происходить на функциональном холсте
 //отрисовка карты и объектов на холсте
 function drawElements()

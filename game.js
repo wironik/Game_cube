@@ -40,15 +40,33 @@ function startGame()
 	document.getElementById('menu').style.display='none';
 	
 	//задаем интервал для обработки события перемещения через заданное время в настройках
-	interval = setInterval(swap,settings.swapInterval);
+	interval = setInterval(swapGame,settings.swapInterval);
+	
+	timer = setInterval(updateTime, 1000);
 }
-
+//функция, необходимая для перемещения куба, в котором находится игрок и отрисовки изменения кадра
+function swapGame()
+{
+	swap();
+	refreshGame();
+}
 function finishGame()
 {
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	
 	document.getElementById('finish').style.display='block';
 	clearInterval(interval);
+	clearInterval(timer);
+	
+	document.getElementById('time').innerHTML ='Время: 00:00:00';
+	//document.getElementById('finishTime').innerHTML ='Время: 0'+hour + ':0' + min + ':0' + sec;
+	visualTime('finishTime');
+	
+	sec=0;
+	min=0;
+	hour=0;
+	
 	document.removeEventListener('keydown', gameStrategy);
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 //задаем стратегию, методы для основной игры которые будут выполняться при нажатии клавиши
 function gameStrategy()
@@ -65,8 +83,6 @@ function refreshGame()
 	{
 		// получаем текущий куб, в котором находится игрок для получения информации
 		var cube=getCube(user.centerx,user.centery);
-		//стираем холст
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		
 		//Проверка столкновения со стенами
 		if (checkCollision(cube)==false) 
@@ -81,13 +97,15 @@ function refreshGame()
 			user.dx=0;
 			user.dy=0;
 		}
-		drawCube();
-		
 		if (cube.stat=="finish")
 		{
 			finishGame();
 		}
 	}
+	//стираем холст
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	//рисуем
+	drawCube();
 }
 
 //отрисовка отдельного куба
