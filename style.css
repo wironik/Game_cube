@@ -1,0 +1,95 @@
+.body
+{
+	background:#000;
+}
+.statusBar
+{
+	margin: 10 20 10 30;
+	position:fixed;
+	width:15%;
+	height:15%;
+	color:#fff;
+	font-size:24px;
+	font-family:DPix_8pt;
+}
+.game canvas
+{
+	margin-left:25%;
+	width:50%;
+	height:100%;
+	display: block;
+	position:fixed;
+}
+
+.menu
+{
+	padding-top:5%;
+	text-align:center;
+	background:#fff;
+	height:40%;
+	width:40%;
+	position:fixed;
+	top:20%;
+	left:30%;
+	right:30%;
+	z-index:1;
+	
+}
+.menu input
+{
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+	width:50%;
+	height:10%;
+	margin-bottom:1%;
+	font-family:DPix_8pt;
+}
+.finish
+{
+	padding-top:5%;
+	text-align:center;
+	background:#fff;
+	height:40%;
+	width:40%;
+	position:fixed;
+	top:20%;
+	left:30%;
+	right:30%;
+	z-index:1;
+	display:none;
+}
+.finish input
+{
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+	width:50%;
+	height:10%;
+	margin-bottom:1%;
+	font-family:DPix_8pt;
+}
+.help
+{
+	padding-top:5%;
+	text-align:center;
+	background:#fff;
+	height:40%;
+	width:40%;
+	position:fixed;
+	top:20%;
+	left:30%;
+	right:30%;
+	z-index:2;
+	display:none;
+}
+.help input
+{
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+	width:50%;
+	height:10%;
+	margin-bottom:1%;
+	font-family:DPix_8pt;
+}

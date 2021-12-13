@@ -1,0 +1,52 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Cube game</title>
+	
+		<!-- ссылка на стиль-->
+		<link rel="stylesheet" type="text/css" href="style.css"></link>
+		<!-- ссылка на скрипт-->
+		<script type="text/javascript" src="start.js"></script>
+		<script type="text/javascript" src="process.js"></script>
+		<script type="text/javascript" src="generate.js"></script>
+		<script type="text/javascript" src="game.js"></script>
+		<script type="text/javascript" src="labirynth.js"></script>
+		<!--<script type="text/javascript" src="script.js"></script>-->
+
+	</head>
+
+	<body class="body">
+		<div class="statusBar">
+			<p>F1 - Help</p>
+			<p>ESC - Menu</p>
+		</div>
+		<!-- игровое поле -->
+		<div class="game">
+			<canvas id="canvas">
+			</canvas>
+			<!--<canvas id="player"></canvas>-->
+		</div>
+		<!--всплывающее меню-->
+		<div id="menu" class="menu">
+			<h1> Куб </h1>
+			<input type="button" value="Начать игру" onclick="startGame()" ></input>
+			<input type="button" value="Пройти лабиринт" onclick="startLabitynth()" ></input>
+			<input type="button" value="Как играть" onclick="help()" ></input>
+		</div>
+		<div id="finish" class="finish">
+			<h1> Вы прошли! </h1>
+			<input type="button" value="Начать игру" onclick="startGame()" ></input>
+			<input type="button" value="Пройти лабиринт" onclick="startLabitynth()" ></input>
+			<input type="button" value="Как играть" onclick="help()" ></input>
+		</div>
+		<div id="help" class="help">
+			<p>Цель игры: Пройти лабиринт. Лабиринт будет пройден в случае, если попасть в куб с белым малым кубом внутри</p>
+			<p>Управление:</p>
+			<p>W A S D и стрелки - перемещение</p>
+			<p>Пробел - телепорт</p>
+			<p>F1 - вызов данного окна</p>
+			<p>ESC - выход в главное меню</p>
+			<input type="button" value="Закрыть" onclick="closeHelp()" ></input>
+		</div>
+	</body>
+</html>
