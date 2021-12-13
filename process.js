@@ -1,3 +1,38 @@
+//функция, задающая глобальным переменным параметры
+function start()
+{
+	//скрываем все элементы, если они не закрыты
+	document.getElementById('finish').style.display='none';
+	document.getElementById('pause').style.display='none';
+	
+	//берем данные из html содержимого
+	canvas = document.getElementById('canvas');
+	ctx = canvas.getContext('2d');
+	
+	//получаем размеры игрока, карты и холста
+	user.width=Math.round(settings.canvasWidth/settings.countCubes/6);
+	user.height=Math.round(settings.canvasHeight/settings.countCubes/6);
+	
+	//задаем области рисования и обьекту карты размеры из настроек
+	map.width=settings.canvasWidth;
+	map.height=settings.canvasHeight;
+	canvas.width=settings.canvasWidth;
+	canvas.height=settings.canvasHeight;
+	
+	//задаем пользователю расположение в центральном кубе
+	user.x=Math.round(map.width/2)-Math.round(user.width/2);
+	user.centerx=user.width/2+user.x;
+	user.y=Math.round(map.height/2)-Math.round(user.height/2);
+	user.centery=user.height/2+user.y;
+	
+	timer = setInterval(updateTime, 1000);
+	
+	eyes=undefined;
+	swapped=undefined;
+	
+	//скрываем окно
+	document.getElementById('menu').style.display='none';
+}
 //счетчик времени
 function updateTime()
 {
@@ -56,6 +91,8 @@ function visualTime(id)
 // Обработка нажатия кнопок
 function processKey(e) 
 {
+	//console.log(e.keyCode);
+	
 	//блокируем нажатие клавиш по умолчанию (сами будем задавать нужное)
 	e.preventDefault();
 	// Если значок находится в движении, 
@@ -81,26 +118,50 @@ function processKey(e)
 	//если нажат пробел,
 	//меняем куб, в котором находится игрок с любым подходящим
 	if (e.keyCode == 32)
-		swap();
+		teleport();
+	if (e.keyCode == 9)
+		openMap();
 	if (e.keyCode == 112)
 		help();
 	if (e.keyCode == 27)
 		menu();
 }
-
+//обработка функции нажатия на пробел - принудительное перемещение куба
+function teleport()
+{
+	if (swapped==undefined)
+	{
+		teleportUser();
+		swapped=setTimeout(function(){swapped=undefined;}, settings.teleportTime);
+	}
+}
+//обработка функции нажатия на таб - показать всю карту на некоторое время, работает один раз
+function openMap()
+{
+	if (eyes==undefined)
+	{
+		drawLabirynth();
+		eyes=setTimeout(function(){drawLabirynth();}, 5);
+	}
+}
+//отображение окна подсказки
 function help()
 {
-	document.getElementById('help').style.display='block';
+	if (document.getElementById('help').style.display=='block')
+		document.getElementById('help').style.display='none';
+	else
+		document.getElementById('help').style.display='block';
 }
-
+//закрытие окна подсказки
 function closeHelp()
 {
 	document.getElementById('help').style.display='none';
 }
-
+//открытие главного меню
 function menu()
 {
 	ctx.clearRect(0, 0, map.width, map.height);
+	document.getElementById('finish').style.display='none';
 	document.getElementById('menu').style.display='block';
 	clearInterval(interval);
 	clearInterval(timer);
@@ -111,7 +172,27 @@ function menu()
 	document.removeEventListener('keydown', gameStrategy);
 	document.removeEventListener('keydown', labirynthStrategy);
 }
+//!!!разобраться с паузой!!!!
+function pause()
+{
+	document.getElementById('pause').style.display='block';
+	document.getElementById('resume').onclick="";
+	clearInterval(interval);
+	clearInterval(timer);
+	document.removeEventListener('keydown', gameStrategy);
+	document.removeEventListener('keydown', labirynthStrategy);
+}
 
+function resumeGame()
+{
+	
+}
+
+function resumeLabitynth()
+{
+	
+}
+//!!!досюда, этот блок
 //поиск куба, в котором находится игрок
 function getCube(x,y,w,h)
 {
@@ -133,9 +214,9 @@ function getCube(x,y,w,h)
 		}
 	}
 }
-
+//проверка столкновений
 function checkCollision(cube)
-{	//проверка столкновений
+{	
 	//!!! добавить изменение dx , чтобы примыкать к стене вплотную, если столкновение true
 	
 	//предполагаемые координаты, если бы совершили шаг
@@ -232,11 +313,10 @@ function checkCollision(cube)
 		}
 	}
 }
-
+//функция смены местами кубов с одинаковыми дверями
 function swap()
-{	//функция смены местами кубов с одинаковыми дверями
-
-	//console.log("\nswap");
+{	
+	//console.log("swap");
 	//функция сравнения содержимого двух одномерных массивов
 	function compareArrays(a, b) 
 	{
@@ -342,4 +422,27 @@ function swap()
 		user.centerx=user.width/2+user.x;
 		user.centery=user.height/2+user.y;
 	}
+	//console.log("end swap");
+}
+//функция, которая перемещает только игрока в новый куб
+function teleportUser()
+{
+	//получаем текущий куб, в котором находится игрок
+	var cube=getCube(user.centerx,user.centery);
+	
+	//рандомом ищем i,j rand = min + Math.random() * (max + 1 - min);
+	var randi=Math.round(1 - 0.5 + Math.random() * (settings.countCubes-2 + 1 - 1));
+	var randj=Math.round(1 - 0.5 + Math.random() * (settings.countCubes-2 + 1 - 1));
+	
+	//получаем будущий куб, в который будет перемещен игрок
+	var newCube=map.cubes[randi][randj];
+	
+	//меняем расположение игрока, чтобы он сохранился в старом кубе
+	var deltax=Math.round(user.x-map.cubes[cube.i][cube.j].x);
+	var deltay=Math.round(user.y-map.cubes[cube.i][cube.j].y);
+		
+	user.x=Math.round(map.cubes[randi][randj].x+deltax);
+	user.y=Math.round(map.cubes[randi][randj].y+deltay);
+	user.centerx=user.width/2+user.x;
+	user.centery=user.height/2+user.y;
 }

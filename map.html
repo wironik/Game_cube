@@ -19,6 +19,8 @@
 		<div class="statusBar">
 			<p>F1 - Help</p>
 			<p>ESC - Menu</p>
+			<p>TAB - Map</p>
+			<p>SPACE - teleport</p>
 		</div>
 		<div class="timer">
 			<p id="time">Время: 00:00:00</p>
@@ -33,24 +35,31 @@
 		<!--всплывающее меню-->
 		<div id="menu" class="menu">
 			<h1> Куб </h1>
-			<input type="button" value="Начать игру" onclick="startGame()" ></input>
-			<input type="button" value="Пройти лабиринт" onclick="startLabitynth()" ></input>
+			<input type="button" value="Слепой лабиринт" onclick="startGame()" ></input>
+			<input type="button" value="Обычный лабиринт" onclick="startLabitynth()" ></input>
+			<input type="button" value="Сложный лабиринт" onclick="startHardLabitynth()" ></input>
+			<input type="button" value="Как играть - F1" onclick="help()" ></input>
+		</div>
+		<div id="pause" class="pause">
+			<h1> Пауза </h1>
+			<input type="button" id = "resume" value="Продолжить игру"></input>
+			<input type="button" value="Главное меню" onclick="menu()" ></input>
 			<input type="button" value="Как играть - F1" onclick="help()" ></input>
 		</div>
 		<div id="finish" class="finish">
 			<h1> Вы прошли! </h1>
 			<p id="finishTime"></p>
-			<input type="button" value="Начать игру" onclick="startGame()" ></input>
-			<input type="button" value="Пройти лабиринт" onclick="startLabitynth()" ></input>
+			<input type="button" value="Главное меню" onclick="menu()" ></input>
 			<input type="button" value="Как играть - F1" onclick="help()" ></input>
 		</div>
 		<div id="help" class="help">
 			<p>Цель игры: Пройти лабиринт. Лабиринт будет пройден в случае, если попасть в куб с белым малым кубом внутри</p>
 			<p>Управление:</p>
 			<p>W A S D и стрелки - перемещение</p>
-			<p>Пробел - телепорт</p>
-			<p>F1 - вызов данного окна</p>
+			<p>Пробел - попадание в случайный куб (доступно каждые 10 секунд)</p>
+			<p>F1 - вызов/закрытие данного окна</p>
 			<p>ESC - выход в главное меню</p>
+			<p>TAB - посмотреть карту (доступно только 1 раз, вы не должны двигаться)</p>
 			<input type="button" value="Закрыть" onclick="closeHelp()" ></input>
 		</div>
 	</body>

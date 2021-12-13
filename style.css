@@ -63,6 +63,36 @@
 	margin-bottom:1%;
 	font-family:DPix_8pt;
 }
+
+.pause
+{
+	padding-top:5%;
+	padding-bottom:5%;
+	min-height:40%;
+	width:40%;
+	
+	text-align:center;
+	background:#fff;
+	
+	position:fixed;
+	top:20%;
+	left:30%;
+	right:30%;
+	
+	z-index:1;
+	display:none;
+	
+}
+.pause input
+{
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+	width:50%;
+	height:10%;
+	margin-bottom:1%;
+	font-family:DPix_8pt;
+}
 .finish
 {
 	padding-top:5%;

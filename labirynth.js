@@ -1,28 +1,7 @@
 //лабиринт - кнопка меню
 function startLabitynth()
 {
-	//скрываем все элементы, если они не закрыты
-	document.getElementById('finish').style.display='none';
-	
-	//берем данные из html содержимого
-	canvas = document.getElementById('canvas');
-	ctx = canvas.getContext('2d');
-	
-	//получаем размеры игрока, карты и холста
-	user.width=Math.round(settings.canvasWidth/settings.countCubes/6);
-	user.height=Math.round(settings.canvasHeight/settings.countCubes/6);
-	
-	//задаем области рисования и обьекту карты размеры из настроек
-	map.width=settings.canvasWidth;
-	map.height=settings.canvasHeight;
-	canvas.width=settings.canvasWidth;
-	canvas.height=settings.canvasHeight;
-	
-	//задаем пользователю расположение в центральном кубе
-	user.x=Math.round(map.width/2)-Math.round(user.width/2);
-	user.centerx=user.width/2+user.x;
-	user.y=Math.round(map.height/2)-Math.round(user.height/2);
-	user.centery=user.height/2+user.y;
+	start();
 
 	//создаем кубы
 	createCubes();
@@ -31,19 +10,36 @@ function startLabitynth()
 	//создаем стены
 	createWalls();
 	//рисуем карту
-	drawElements();
+	drawLabirynth();
 
 	//привязка стратегии к ивенту
 	document.addEventListener('keydown', labirynthStrategy);
 	
-	//скрываем окно
-	document.getElementById('menu').style.display='none';
+	//задаем интервал для обработки события перемещения через заданное время в настройках
+	interval = setInterval(swapLabirynth,settings.swapInterval);
+}
+
+//лабиринт - кнопка меню
+function startHardLabitynth()
+{
+	start();
+
+	//создаем кубы
+	createCubes();
+	//создаем двери
+	createHardDoors();
+	//создаем стены
+	createWalls();
+	//рисуем карту
+	drawLabirynth();
+
+	//привязка стратегии к ивенту
+	document.addEventListener('keydown', labirynthStrategy);
 	
 	//задаем интервал для обработки события перемещения через заданное время в настройках
 	interval = setInterval(swapLabirynth,settings.swapInterval);
-
-	timer = setInterval(updateTime, 1000);
 }
+
 //функция, необходимая для перемещения куба, в котором находится игрок и отрисовки изменения кадра
 function swapLabirynth()
 {
@@ -53,12 +49,10 @@ function swapLabirynth()
 //конец игры
 function finishLabirynth()
 {
-	
 	document.getElementById('finish').style.display='block';
 	clearInterval(interval);
 	clearInterval(timer);
 	document.getElementById('time').innerHTML ='Время: 00:00:00';
-	//document.getElementById('finishTime').innerHTML ='Время: '+hour + ':0' + min + ':0' + sec;
 	visualTime('finishTime');
 	
 	sec=0;
@@ -79,12 +73,12 @@ function labirynthStrategy()
 //обновление кадра в лабиринте
 function refreshLabirynth()
 {
+	//console.log("refresh");
+	// получаем текущий куб, в котором находится игрок для получения информации
+	var cube=getCube(user.centerx,user.centery);
 	// Обновляем кадр только если значок движется
 	if (user.dx != 0 || user.dy != 0) 
 	{
-		// получаем текущий куб, в котором находится игрок для получения информации
-		var cube=getCube(user.centerx,user.centery);
-
 		//Проверка столкновения со стенами
 		if (checkCollision(cube)==false) 
 		{
@@ -98,22 +92,21 @@ function refreshLabirynth()
 			user.dx=0;
 			user.dy=0;
 		}
-		
-		
-		if (cube.stat=="finish")
-		{
-			finishLabirynth();
-		}
 	}
 	//стираем элемент с холста
 	ctx.clearRect(user.x, user.y, user.width, user.height);
 	//рисуем
-	drawElements();
+	drawLabirynth();
+	if (cube.stat=="finish")
+	{
+		finishLabirynth();
+	}
+	//console.log("end refresh");
 }
 //!!!в планах: добавить функцию, которая будет отрисовывать картинку и прочие элементы на холсте для игрока, 
 //!!!холсте для элементов, ака текстуры. все процессы в виде кубов будут происходить на функциональном холсте
 //отрисовка карты и объектов на холсте
-function drawElements()
+function drawLabirynth()
 {
 	//рисуем карту
 	for(var i=0;i<settings.countCubes;i++)

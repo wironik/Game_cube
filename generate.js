@@ -10,7 +10,10 @@ function createCubes()
 			var hei=map.height/settings.countCubes;
 			var x=map.x+wid*i;
 			var y=map.y+hei*j;
-			var color='#'+Math.random().toString(16).slice(2,8);
+
+			var color = "hsl(" + Math.random() * 360 + ", 100%, 75%)";
+			//rand = min + Math.random() * (max + 1 - min);
+			
 			map.cubes[i][j]=new cube(wid,hei,x,y,i,j,color);
 			
 			var door=new Array(4);
@@ -24,7 +27,13 @@ function createCubes()
 			value=0;
 			map.cubes[i][j].door=door;
 			
-			var wallCol='#'+Math.random().toString(16).slice(2,8);
+			//var wallCol='#'+Math.random().toString(16).slice(2,8);
+			var wallCol = '#';
+			for (var k = 0; k < 6; k++) 
+			{
+				wallCol += Math.floor(Math.random() * 6);
+			}
+			
 			map.cubes[i][j].wallColor=wallCol;
 		}
 	}
@@ -42,7 +51,9 @@ function createGameCubes()
 			var hei=map.height/settings.countCubes;
 			var x=map.x+wid*i;
 			var y=map.y+hei*j;
-			var color='#'+Math.random().toString(16).slice(2,8);
+			
+			var color = "hsl(" + Math.random() * 360 + ", 100%, 75%)";
+			
 			map.cubes[i][j]=new cube(wid,hei,x,y,i,j,color);
 			
 			var door=new Array(4);
@@ -56,7 +67,11 @@ function createGameCubes()
 			value=0;
 			map.cubes[i][j].door=door;
 			
-			var wallCol='#'+Math.random().toString(16).slice(2,8);
+			var wallCol = '#';
+			for (var k = 0; k < 6; k++) 
+			{
+				wallCol += Math.floor(Math.random() * 6);
+			}
 			map.cubes[i][j].wallColor=wallCol;
 		}
 	}
@@ -108,7 +123,127 @@ function createFinishCube()
 	map.cubes[randi][randj].stat="finish";
 }
 
-//создание дверей
+//создание дверей - сложный уровень
+function createHardDoors()
+{
+	for(var i=0;i<settings.countCubes;i++)//столбцы
+	{
+		for(var j=0;j<settings.countCubes;j++)//строки
+		{
+			var door=new Array(4);
+			var count=0;
+				
+			if (i==0 && j==0)
+			{
+				door[0]=false;
+				door[1]=false;
+				door[2]=Math.random() < 0.5;
+				//if (door[2]==true) count++;
+				door[3]=Math.random() < 0.5; 
+				//if (door[2]==true) count++;
+				//if (count==0) door[2]=true;
+				count=0;
+			}
+			else if (i==0 && j>0 && j+1!=settings.countCubes)
+			{
+				door[0]=map.cubes[i][j-1].door[2];
+				//if (door[0]==true) count++;
+				door[1]=false;
+				door[2]=Math.random() < 0.5;
+				//if (door[2]==true) count++;
+				door[3]=Math.random() < 0.5;
+				//if (door[3]==true) count++;
+				//if (count==0) door[3]=true;
+				count=0;
+			}
+			else if (i==0 && j+1==settings.countCubes)
+			{
+				door[0]=map.cubes[i][j-1].door[2];
+				//if (door[0]==true) count++;
+				door[1]=false;
+				door[2]=false;
+				door[3]=Math.random() < 0.5;
+				//if (door[3]==true) count++;
+				//if (count==0) door[3]=true;
+				count=0;
+			}
+			else if (i>0 && i+1!=settings.countCubes && j==0)
+			{
+				door[0]=false;
+				door[1]=map.cubes[i-1][j].door[3];
+				//if (door[1]==true) count++;
+				door[2]=Math.random() < 0.5;
+				//if (door[2]==true) count++;
+				door[3]=Math.random() < 0.5;
+				//if (door[3]==true) count++;
+				//if (count==0) door[3]=true;
+				count=0;
+			}
+			else if (i>0 && i+1!=settings.countCubes && j>0 && j+1!=settings.countCubes)
+			{
+				door[0]=map.cubes[i][j-1].door[2];
+				//if (door[0]==true) count++;
+				door[1]=map.cubes[i-1][j].door[3];
+				//if (door[1]==true) count++;
+				door[2]=Math.random() < 0.5;
+				//if (door[2]==true) count++;
+				door[3]=Math.random() < 0.5;
+				//if (door[3]==true) count++;
+				//if (count==0) door[3]=true;
+				count=0;
+				
+			}
+			else if (i>0 && i+1!=settings.countCubes && j+1==settings.countCubes)
+			{
+				door[0]=map.cubes[i][j-1].door[2];
+				//if (door[0]==true) count++;
+				door[1]=map.cubes[i-1][j].door[3];
+				//if (door[1]==true) count++;
+				door[2]=false;
+				door[3]=Math.random() < 0.5;
+				//if (door[3]==true) count++;
+				//if (count==0) door[3]=true;
+				count=0;
+			}
+			else if (i+1==settings.countCubes && j==0)
+			{
+				door[0]=false;
+				door[1]=map.cubes[i-1][j].door[3];
+				//if (door[1]==true) count++;
+				door[2]=Math.random() < 0.5;
+				//if (door[2]==true) count++;
+				//if (count==0) door[2]=true;
+				door[3]=false;
+				count=0;
+			}
+			else if (i+1==settings.countCubes && j>0 && j+1!=settings.countCubes)
+			{
+				door[0]=map.cubes[i][j-1].door[2];
+				//if (door[0]==true) count++;
+				door[1]=map.cubes[i-1][j].door[3];
+				//if (door[1]==true) count++;
+				door[2]=Math.random() < 0.5;
+				//if (door[2]==true) count++;
+				//if (count==0) door[2]=true;
+				door[3]=false;
+				count=0;
+			}
+			else if (i+1==settings.countCubes && j+1==settings.countCubes)
+			{
+				door[0]=map.cubes[i][j-1].door[2];
+				door[1]=map.cubes[i-1][j].door[3];
+				door[2]=false;
+				door[3]=false;
+			}
+			
+			//for (var s=0; s<4; s++)
+			//	if (door[s]!=false) door[s]=Math.random() < 0.5;
+			//door[s]=Math.random() < 0.5;
+			map.cubes[i][j].door=door;
+		}
+	}
+}
+//создание дверей - стандартный уровень
 function createDoors()
 {
 	for(var i=0;i<settings.countCubes;i++)//столбцы
@@ -181,13 +316,13 @@ function createDoors()
 			else if (i>0 && i+1!=settings.countCubes && j+1==settings.countCubes)
 			{
 				door[0]=map.cubes[i][j-1].door[2];
-				//if (door[0]==true) count++;
+				if (door[0]==true) count++;
 				door[1]=map.cubes[i-1][j].door[3];
-				//if (door[1]==true) count++;
+				if (door[1]==true) count++;
 				door[2]=false;
 				door[3]=Math.random() < 0.5;
 				if (door[3]==true) count++;
-				if (count==0) door[3]=true;
+				if (count<=1) door[3]=true;
 				count=0;
 			}
 			else if (i+1==settings.countCubes && j==0)
@@ -204,12 +339,12 @@ function createDoors()
 			else if (i+1==settings.countCubes && j>0 && j+1!=settings.countCubes)
 			{
 				door[0]=map.cubes[i][j-1].door[2];
-				//if (door[0]==true) count++;
+				if (door[0]==true) count++;
 				door[1]=map.cubes[i-1][j].door[3];
-				//if (door[1]==true) count++;
+				if (door[1]==true) count++;
 				door[2]=Math.random() < 0.5;
 				if (door[2]==true) count++;
-				if (count==0) door[2]=true;
+				if (count<=1) door[2]=true;
 				door[3]=false;
 				count=0;
 			}
@@ -228,6 +363,7 @@ function createDoors()
 		}
 	}
 }
+
 
 //создание стен
 function createWalls()

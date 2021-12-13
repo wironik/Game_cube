@@ -1,5 +1,15 @@
 //============глобальные переменные:==============
 
+
+//пауза - разработка
+//меню сделать управление клавиатурой - частично
+//зашел в комнату и куб с выходом переместиться может - потом (на диплом)
+
+
+//!!!улучшить генерацию
+//!!!переместился - куб выделил в который попал
+
+
 //элементы html документа
 var canvas;
 var ctx;
@@ -14,14 +24,19 @@ var sec=0;
 var min=0;
 var hour=0;
 
+//счетчики
+var swapped;
+var eyes;
+
 //настройки
 var settings =
 {
 	countCubes:23,
-	canvasWidth:document.documentElement.clientWidth*2,
-	canvasHeight:document.documentElement.clientHeight*2,
-	wallSize: 7,
-	swapInterval:30000
+	canvasWidth:2000,
+	canvasHeight:2000,
+	wallSize: 5,
+	swapInterval:30000,
+	teleportTime:10000
 };
 
 //игрок
