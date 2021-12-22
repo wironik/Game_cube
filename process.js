@@ -121,10 +121,14 @@ function processKey(e)
 		teleport();
 	if (e.keyCode == 9)
 		openMap();
-	if (e.keyCode == 112)
+	if (e.keyCode == 112)//f1
 		help();
-	if (e.keyCode == 27)
+	if (e.keyCode == 27)//esc
 		menu();
+	if (e.keyCode==120)//f9 - дебаг финиша
+		finishGame();
+	if (e.keyCode==121)//f9 - дебаг финиша
+		finishLabirynth();
 }
 //обработка функции нажатия на пробел - принудительное перемещение куба
 function teleport()
@@ -160,17 +164,19 @@ function closeHelp()
 //открытие главного меню
 function menu()
 {
-	ctx.clearRect(0, 0, map.width, map.height);
-	document.getElementById('finish').style.display='none';
-	document.getElementById('menu').style.display='block';
-	clearInterval(interval);
-	clearInterval(timer);
-	sec=0;
-	min=0;
-	hour=0;
-	document.getElementById('time').innerHTML ='Время: 00:00:00';
-	document.removeEventListener('keydown', gameStrategy);
-	document.removeEventListener('keydown', labirynthStrategy);
+	//ctx.clearRect(0, 0, map.width, map.height);
+	//document.getElementById('finish').style.display='none';
+	//document.getElementById('help').style.display='none';
+	//document.getElementById('menu').style.display='block';
+	//clearInterval(interval);
+	//clearInterval(timer);
+	//sec=0;
+	//min=0;
+	//hour=0;
+	//document.getElementById('time').innerHTML ='Время: 00:00:00';
+	//document.removeEventListener('keydown', gameStrategy);
+	//document.removeEventListener('keydown', labirynthStrategy);
+	location.reload();
 }
 //!!!разобраться с паузой!!!!
 function pause()

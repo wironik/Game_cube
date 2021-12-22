@@ -17,11 +17,37 @@ function startGame()
 	//задаем интервал для обработки события перемещения через заданное время в настройках
 	interval = setInterval(swapGame,settings.swapInterval);
 }
+//старт - кнопка меню
+function startHardGame()
+{
+	start();
+	//создаем кубы
+	createGameCubes();
+	//создаем двери
+	createDoors();
+	//создаем стены
+	createWalls();
+	//рисуем карту
+	//drawCube();
+	refreshHardGame();
+	//привязка стратегии к ивенту
+	document.addEventListener('keydown', gameHardStrategy);
+	
+	//задаем интервал для обработки события перемещения через заданное время в настройках
+	interval = setInterval(swapHardGame,settings.swapInterval);
+}
+
 //функция, необходимая для перемещения куба, в котором находится игрок и отрисовки изменения кадра
 function swapGame()
 {
 	swap();
 	refreshGame();
+}
+//функция, необходимая для перемещения куба, в котором находится игрок и отрисовки изменения кадра
+function swapHardGame()
+{
+	swap();
+	refreshHardGame();
 }
 //функция, которая выполняется после прохождения лабиринта
 function finishGame()
@@ -45,6 +71,12 @@ function gameStrategy()
 {
 	processKey(event);
 	refreshGame();
+}
+//задаем стратегию, методы для основной игры которые будут выполняться при нажатии клавиши
+function gameHardStrategy()
+{
+	processKey(event);
+	refreshHardGame();
 }
 //обновление кадра в игре
 function refreshGame()
@@ -72,6 +104,61 @@ function refreshGame()
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	//рисуем
 	drawCube();
+	if (cube.stat=="finish")
+	{
+		finishGame();
+	}
+}
+
+//обновление кадра в игре
+function refreshHardGame()
+{
+	// получаем текущий куб, в котором находится игрок для получения информации
+	var cube=getCube(user.centerx,user.centery);
+	// Обновляем кадр только если значок движется
+	if (user.dx != 0 || user.dy != 0) 
+	{
+		//Проверка столкновения со стенами
+		if (checkCollision(cube)==false) 
+		{
+			user.x += user.dx;
+			user.y += user.dy;
+			user.centerx+=user.dx;
+			user.centery+=user.dy;
+		}
+		else
+		{
+			user.dx=0;
+			user.dy=0;
+		}
+	}
+	//стираем холст
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	//рисуем
+	//рисуем игрока
+	ctx.fillStyle=user.color;
+	ctx.fillRect(user.x,user.y, user.width, user.height);
+	ctx.strokeRect(user.x,user.y, user.width, user.height);
+	
+	//рисуем карту
+	for(var i=0;i<settings.countCubes;i++)
+	{
+		for(var j=0;j<settings.countCubes;j++)
+		{
+			if (map.cubes[i][j].stat=="finish")
+			{
+				//рисуем отметку финиша
+				var finishx=map.cubes[i][j].x+map.cubes[i][j].width/4;
+				var finishy=map.cubes[i][j].y+map.cubes[i][j].height/4;
+				var finishw=map.cubes[i][j].width/2;
+				var finishh=map.cubes[i][j].height/2;
+				ctx.fillStyle="#fff";
+				ctx.fillRect(finishx,finishy, finishw, finishh);
+				ctx.strokeRect(finishx,finishy, finishw, finishh);
+			}
+		}
+	}
+	
 	if (cube.stat=="finish")
 	{
 		finishGame();

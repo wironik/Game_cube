@@ -30,7 +30,7 @@ var settings =
 	canvasWidth:2000,
 	canvasHeight:2000,
 	wallSize: 5,
-	swapInterval:30000,
+	swapInterval:60000,
 	swapHardInterval:15000,
 	teleportTime:10000
 };
