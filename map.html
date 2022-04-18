@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>Cube game</title>
+		<title>Cube game v1.4</title>
 	
 		<!-- ссылка на стиль-->
 		<link rel="stylesheet" type="text/css" href="style.css"></link>
@@ -10,58 +10,64 @@
 		<script type="text/javascript" src="process.js"></script>
 		<script type="text/javascript" src="generate.js"></script>
 		<script type="text/javascript" src="game.js"></script>
-		<script type="text/javascript" src="labirynth.js"></script>
 		<!--<script type="text/javascript" src="script.js"></script>-->
 
 	</head>
 
 	<body class="body">
 		<div class="statusBar">
-			<p>F1 - Help</p>
-			<p>ESC - Menu</p>
-			<p>TAB - Map</p>
-			<p>SPACE - teleport</p>
+			<p>F1 - Помощь</p>
+			<p>ESC - Меню</p>
 		</div>
 		<div class="timer">
 			<p id="time">Время: 00:00:00</p>
 		</div>
 		<!-- игровое поле -->
 		<div class="game">
+			<!-- поле игры -->
 			<canvas id="canvas">
 			</canvas>
-			<!--<canvas id="player"></canvas>-->
+			<!-- игровая карта -->
+			<canvas class="maplist" id="maplist">
+			</canvas>
 		</div>
 		
 		<!--всплывающее меню-->
-		<div id="menu" class="menu">
-			<h1> Куб </h1>
-			<input type="button" value="Слепой лабиринт" onclick="startGame()" ></input>
-			<input type="button" value="Невидимый лабиринт" onclick="startHardGame()" ></input>
-			<input type="button" value="Обычный лабиринт" onclick="startLabitynth()" ></input>
-			<input type="button" value="Сложный лабиринт" onclick="startHardLabitynth()" ></input>
-			<input type="button" value="Как играть - F1" onclick="help()" ></input>
+		<div id="menu" class="menu" style="display:flex;">
+			<div class="menu-content">
+				<h1 class="title"> Куб </h1>
+				<input class="menu-btn" type="button" value="Начать игру" onclick="startGame()" ></input>
+				<input class="menu-btn" type="button" value="Статистика"  ></input>
+				<input class="menu-btn" type="button" value="Настройки" onclick="displayed('controls')" ></input>
+				<input class="menu-btn" type="button" value="Об игре" onclick="displayed('help')" ></input>
+			</div>
 		</div>
-		<div id="pause" class="pause">
-			<h1> Пауза </h1>
-			<input type="button" id = "resume" value="Продолжить игру"></input>
-			<input type="button" value="Главное меню" onclick="menu()" ></input>
-			<input type="button" value="Как играть - F1" onclick="help()" ></input>
+		<div id="finish" class="menu">
+			<div class="menu-content">
+				<h1 class="title"> Вы прошли! </h1>
+				<p class="text" style="text-align:center;" id="finishTime"></p>
+				<input type="button" class="menu-btn" value="Главное меню" onclick="menu()" ></input>
+				<input type="button" class="menu-btn" value="Об игре" onclick="displayed('help')" ></input>
+			</div>
 		</div>
-		<div id="finish" class="finish">
-			<h1> Вы прошли! </h1>
-			<p id="finishTime"></p>
-			<input type="button" value="Главное меню" onclick="menu()" ></input>
-			<input type="button" value="Как играть - F1" onclick="help()" ></input>
+		<div id="help" class="menu">
+			<div class="menu-content">
+				<h1 class="title"> Правила игры: </h1>
+				<p class="text">Перед игроком стоит задача выбраться из лабиринта,
+				состоящий из множества комнат, в которых находятся
+				различные ловушки, а также всякие предметы,
+				которые могут облегчить поиск выхода, или же
+				усложнить его.</p>
+				<input type="button" class="menu-btn" value="Закрыть" onclick="displayed('help')" ></input>
+			</div>
 		</div>
-		<div id="help" class="help">
-			<p>Цель игры: Пройти лабиринт. Лабиринт будет пройден в случае, если попасть в куб с белым малым кубом внутри</p>
-			<p>Управление:</p>
-			<p>W A S D и стрелки - перемещение</p>
-			<p>Пробел - попадание в случайный куб (доступно каждые 10 секунд)</p>
-			<p>F1 - вызов/закрытие данного окна</p>
-			<p>ESC - выход в главное меню</p>
-			<p>TAB - посмотреть карту (доступно только 1 раз, вы не должны двигаться)</p>
-			<input type="button" value="Закрыть" onclick="closeHelp()" ></input>
+		<div id="controls" class="menu">
+			<div class="menu-content">
+				<h1 class="title"> Управление </h1>
+				<p class="text">WASD - перемещение игрока</p> 
+				<p class="text">SPACE - телепорт в случайную комнату</p>
+				<p class="text">TAB - отобразить карту</p>
+				<input type="button" class="menu-btn" value="Закрыть" onclick="displayed('controls')" ></input>
 		</div>
 	</body>
 </html>

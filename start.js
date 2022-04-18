@@ -11,6 +11,7 @@ var ctx;
 
 //события
 var interval;
+var gameStatus="stop"
 
 //таймер
 var timer;
@@ -26,33 +27,39 @@ var eyes;
 //настройки
 var settings =
 {
-	countCubes:23,
-	canvasWidth:2000,
-	canvasHeight:2000,
-	wallSize: 5,
+	countCubes:19,
+	
+	canvasWidth:1000,
+	canvasHeight:1000,
+	cellWidth:100,
+	cellHeight:100,
+	
 	swapInterval:60000,
-	swapHardInterval:15000,
-	teleportTime:10000
+	teleportTime:10000,
+	mapTime:10000
 };
 //игрок
 var user=
 {
-	width:0,
-	height:0,
+	width:50,
+	height:50,
 	dx:0, //смещение по х
-	x:60,
-	centerx:30,
+	x:500,
+	centerx:525,
 	dy:0, //смещение по у
-	y:60,
-	centery:30,
-	speed:7,
+	y:500,
+	centery:525,
+	speed:10,
+	
+	i:0,
+	j:0,
 	color:"red"
 }
 //карта
 var map=
 {
-	width:0,
-	height:0,
+	width:1000,
+	height:1000,
 	x:0,
 	y:0,
 	color:"#ffffff",
@@ -70,16 +77,17 @@ class cube
 		this.i=i;
 		this.j=j;
 		this.color=color;
-		this.wall=[];
-		this.door=[];
 		
-		this.wallSize=settings.wallSize;
-		this.wallColor="black";
+		this.door=[];
+		this.cell=[];
+		
+		this.cellSize=100;
+		this.cellColor="black";
 		this.stat="normal";
 	}
 }
 //стены
-class wall
+class cell
 {
 	constructor(width,height,x,y,color)
 	{
@@ -88,6 +96,7 @@ class wall
 		this.x=x;
 		this.y=y;
 		this.color=color;
+		this.stat="normal";
 	}
 }
 

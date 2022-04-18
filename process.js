@@ -1,29 +1,17 @@
 //функция, задающая глобальным переменным параметры
 function start()
 {
-	//скрываем все элементы, если они не закрыты
-	document.getElementById('finish').style.display='none';
-	document.getElementById('pause').style.display='none';
-	
 	//берем данные из html содержимого
 	canvas = document.getElementById('canvas');
 	ctx = canvas.getContext('2d');
 	
-	//получаем размеры игрока, карты и холста
-	user.width=Math.round(settings.canvasWidth/settings.countCubes/6);
-	user.height=Math.round(settings.canvasHeight/settings.countCubes/6);
-	
 	//задаем области рисования и обьекту карты размеры из настроек
-	map.width=settings.canvasWidth;
-	map.height=settings.canvasHeight;
 	canvas.width=settings.canvasWidth;
 	canvas.height=settings.canvasHeight;
 	
-	//задаем пользователю расположение в центральном кубе
-	user.x=Math.round(map.width/2)-Math.round(user.width/2);
-	user.centerx=user.width/2+user.x;
-	user.y=Math.round(map.height/2)-Math.round(user.height/2);
-	user.centery=user.height/2+user.y;
+	//задаем индексы расположения игрока
+	user.i=Math.floor(settings.countCubes/2);
+	user.j=Math.floor(settings.countCubes/2);
 	
 	timer = setInterval(updateTime, 1000);
 	
@@ -48,7 +36,6 @@ function updateTime()
         min = min - 60;
     }
     visualTime('time');
-	//console.log(hour,min,sec);
 }
 //отображение времени на любом из элементов html в формате hh:mm:ss
 function visualTime(id)
@@ -92,43 +79,37 @@ function visualTime(id)
 function processKey(e) 
 {
 	//console.log(e.keyCode);
-	
 	//блокируем нажатие клавиш по умолчанию (сами будем задавать нужное)
 	e.preventDefault();
-	// Если значок находится в движении, 
-	// останавливаем его
 	user.dx = 0;
 	user.dy = 0;
-	// Если нажата стрелка вверх, 
-	// начинаем двигаться вверх
-	if (e.keyCode == 87 || e.keyCode ==38) 
+	if (e.keyCode == 87 || e.keyCode ==38) //вверх
 		user.dy = -1*user.speed;
-	// Если нажата стрелка вниз, 
-	// начинаем двигаться вниз
-	if (e.keyCode == 83 || e.keyCode ==40) 
+	if (e.keyCode == 83 || e.keyCode ==40) //вниз
 		user.dy = user.speed;
-	// Если нажата стрелка влево, 
-	// начинаем двигаться влево
-	if (e.keyCode == 65 || e.keyCode ==37) 
+	if (e.keyCode == 65 || e.keyCode ==37) //влево
 		user.dx = -1*user.speed;
-	// Если нажата стрелка вправо, 
-	// начинаем двигаться вправо
-	if (e.keyCode == 68 || e.keyCode ==39) 
+	if (e.keyCode == 68 || e.keyCode ==39) //вправо
 		user.dx = user.speed;
-	//если нажат пробел,
-	//меняем куб, в котором находится игрок с любым подходящим
-	if (e.keyCode == 32)
+	if (e.keyCode == 32)//пробел
 		teleport();
-	if (e.keyCode == 9)
+	if (e.keyCode == 9)//tab
 		openMap();
 	if (e.keyCode == 112)//f1
-		help();
+		displayed('help');
 	if (e.keyCode == 27)//esc
 		menu();
-	if (e.keyCode==120)//f9 - дебаг финиша
+	if (e.keyCode == 120)//f9 финиш отладка
 		finishGame();
-	if (e.keyCode==121)//f9 - дебаг финиша
-		finishLabirynth();
+}
+
+function mapKey(e)
+{
+	e.preventDefault();
+	if (e.keyCode == 27)//esc
+		closeMap();
+	if (e.keyCode == 9)//tab
+		closeMap();
 }
 //обработка функции нажатия на пробел - принудительное перемещение куба
 function teleport()
@@ -139,91 +120,97 @@ function teleport()
 		swapped=setTimeout(function(){swapped=undefined;}, settings.teleportTime);
 	}
 }
-//обработка функции нажатия на таб - показать всю карту на некоторое время, работает один раз
-function openMap()
+function getFinish()
 {
-	if (eyes==undefined)
-	{
-		drawLabirynth();
-		eyes=setTimeout(function(){drawLabirynth();}, 5);
-	}
-}
-//отображение окна подсказки
-function help()
-{
-	if (document.getElementById('help').style.display=='block')
-		document.getElementById('help').style.display='none';
-	else
-		document.getElementById('help').style.display='block';
-}
-//закрытие окна подсказки
-function closeHelp()
-{
-	document.getElementById('help').style.display='none';
-}
-//открытие главного меню
-function menu()
-{
-	//ctx.clearRect(0, 0, map.width, map.height);
-	//document.getElementById('finish').style.display='none';
-	//document.getElementById('help').style.display='none';
-	//document.getElementById('menu').style.display='block';
-	//clearInterval(interval);
-	//clearInterval(timer);
-	//sec=0;
-	//min=0;
-	//hour=0;
-	//document.getElementById('time').innerHTML ='Время: 00:00:00';
-	//document.removeEventListener('keydown', gameStrategy);
-	//document.removeEventListener('keydown', labirynthStrategy);
-	location.reload();
-}
-//!!!разобраться с паузой!!!!
-function pause()
-{
-	document.getElementById('pause').style.display='block';
-	document.getElementById('resume').onclick="";
-	clearInterval(interval);
-	clearInterval(timer);
-	document.removeEventListener('keydown', gameStrategy);
-	document.removeEventListener('keydown', labirynthStrategy);
-}
-//!!!возобновить игру
-function resumeGame()
-{
-	
-}
-//!!!возобновить лабиринт
-function resumeLabitynth()
-{
-	
-}
-//поиск куба, в котором находится игрок
-function getCube(x,y,w,h)
-{
-	for(var i=0;i<settings.countCubes;i++)//столбцы
+	for(var i=0;i<settings.countCubes;i++)
 	{
 		for(var j=0;j<settings.countCubes;j++)
 		{
-			var minx=map.cubes[i][j].x;
-			var miny=map.cubes[i][j].y;
-			var maxx=map.cubes[i][j].x+map.cubes[i][j].width;
-			var maxy=map.cubes[i][j].y+map.cubes[i][j].height;
-				
-			if((minx<x) && (x<maxx)&& (miny<y)&& (y<maxy) )
+			if (map.cubes[i][j].stat=="finish")
 			{
-				//console.log("cube:",i,j);
 				return map.cubes[i][j];
 				break;
 			}
 		}
 	}
 }
-//проверка столкновений
+//обработка функции нажатия на таб - показать всю карту на некоторое время, работает один раз
+function openMap()
+{
+	if (eyes==undefined)
+	{
+		drawMap(getFinish());
+		eyes=setTimeout(function(){eyes=undefined;}, settings.mapTime);
+	}
+}
+function closeMap()
+{
+	//отвязка игровых кнопок
+	document.removeEventListener('keydown', mapKey);
+	
+	//привязка нужных
+	document.addEventListener('keydown', gameStrategy);
+	
+	//скрываем карту
+	document.getElementById('maplist').style.display='none';
+}
+//отображение окна подсказки
+function displayed(id)
+{
+	if (document.getElementById(id).style.display=='flex')
+	{
+		document.getElementById(id).style.display='none';
+		if (gameStatus=="stop")
+		document.getElementById('menu').style.display='flex';
+		if (gameStatus=="finish")
+		document.getElementById('finish').style.display='flex';
+	}
+	else
+	{
+		document.getElementById(id).style.display='flex';
+		if (gameStatus=="stop")
+		document.getElementById('menu').style.display='none';
+		if (gameStatus=="finish")
+		document.getElementById('finish').style.display='none';
+	}
+}
+//открытие главного меню
+function menu()
+{
+	location.reload();
+}
+
+//поиск куба, в котором находится игрок
+function getCube(i,j)
+{
+	return map.cubes[i][j];
+}
+
+//поиск клетки, на которой стоит игрок
+function getCell(cube, x,y)
+{
+	for(var i=0;i<10;i++)//столбцы
+	{
+		for(var j=0;j<10;j++)
+		{
+			var minx=cube.cell[i][j].x;
+			var miny=cube.cell[i][j].y;
+			var maxx=cube.cell[i][j].x+cube.cell[i][j].width;
+			var maxy=cube.cell[i][j].y+cube.cell[i][j].height;
+				
+			if((minx<=x) && (x<=maxx)&& (miny<=y)&& (y<=maxy) )
+			{
+				return cube.cell[i][j];
+				break;
+			}
+		}
+	}
+}
+
+//проверка столкновений (передаем клетку, на которой стоит игрок!)
 function checkCollision(cube)
 {	
 	//!!! добавить изменение dx , чтобы примыкать к стене вплотную, если столкновение true
-	
 	//предполагаемые координаты, если бы совершили шаг
 	var x=user.x+user.dx;
 	var y=user.y+user.dy;
@@ -234,94 +221,94 @@ function checkCollision(cube)
 	//шаг вверх
 	if (user.dy<0)
 	{
-		if (cube.door[0]==true)
+		if (user.y<0)
 		{
-			//если дверь в кубе имеется, проверяем две стены с возможностью пройти в проход
-			if (y<cube.y+cube.wallSize && (x<Math.round(cube.width/3)+cube.x || w>Math.round(cube.width/3*2)+cube.x))
-				return true;
-			//если мы идем вверх, находясь в промежутке левых или правых дверей
-			else if (y<Math.round(cube.height/3)+cube.y &&(x<cube.x+cube.wallSize  ||  w>cube.x+cube.width-cube.wallSize))
-				return true;
-			else return false;
+			user.i-=1;
+			user.y=settings.canvasHeight-user.height;
+			user.centery=settings.canvasHeight-user.height-Math.round(settings.userHeight/2);
 		}
 		else
-		//если двери нет, то проверяем целую стену
 		{
-			if (y<cube.y+cube.wallSize)
-				return true;
-			//если находимся в промежутке правых или левых дверей
-			else if (y<Math.round(cube.height/3)+cube.y &&(x<cube.x+cube.wallSize  ||  w>cube.x+cube.width-cube.wallSize))
+			//значения для верхнего левого и правого угла игрока
+			var cellleft=getCell(cube, user.x, user.y);
+			var cellright=getCell(cube, user.x+user.width, user.y);
+			if (cellleft.stat=="wall" || cellright.stat=="wall")
 				return true;
 			else return false;
+			cellleft=undefined;
+			cellright=undefined;
 		}
 	}
+	//шаг влево
 	else if (user.dx<0)
 	{
-		if (cube.door[1]==true)
+		if (user.x<0)
 		{
-			//промежуток
-			if (x<cube.x+cube.wallSize && (y<Math.round(cube.height/3)+cube.y || h>Math.round(cube.height/3*2)+cube.y))
-				return true;
-			else if (x<Math.round(cube.width/3)+cube.x &&(y<cube.y+cube.wallSize  ||  h>cube.y+cube.height-cube.wallSize))
-				return true;
-			else return false;
+			user.j-=1;
+			user.x=settings.canvasWidth-user.width;
+			user.centerx=settings.canvasHeight-user.height-Math.round(settings.userHeight/2);
 		}
 		else
-		//целиком
 		{
-			if (x<cube.x+cube.wallSize)
-				return true;
-			else if (x<Math.round(cube.width/3)+cube.x &&(y<cube.y+cube.wallSize  ||  h>cube.y+cube.height-cube.wallSize))
+			//значения для левого верхнего и нижнего угла игрока
+			var cellup=getCell(cube, user.x, user.y);
+			var celldown=getCell(cube, user.x, user.y+user.height);
+			if (cellup.stat=="wall" || celldown.stat=="wall")
 				return true;
 			else return false;
+			cellup=undefined;
+			celldown=undefined;
 		}
 	}
+	//шаг вниз
 	else if (user.dy>0)
 	{
-		if (cube.door[2]==true)
+		if (user.y+user.height>settings.canvasHeight)
 		{
-			if (h>cube.y+cube.height-cube.wallSize && (x<Math.round(cube.width/3)+cube.x || w>Math.round(cube.width/3*2)+cube.x))
-				return true;
-			else if (h>Math.round(cube.height/3*2)+cube.y &&(x<cube.x+cube.wallSize  ||  w>cube.x+cube.width-cube.wallSize))
-				return true;
-			else return false;
+			user.i+=1;
+			user.y=0;
+			user.centery=0+Math.round(settings.userHeight/2);
 		}
 		else
-		//целиком
 		{
-			if (h>cube.y+cube.height-cube.wallSize)
-				return true;
-			else if (h>Math.round(cube.height/3*2)+cube.y &&(x<cube.x+cube.wallSize  ||  w>cube.x+cube.width-cube.wallSize))
+			//значения для нижнего левого и правого угла игрока
+			var cellleft=getCell(cube, user.x, user.y+user.height);
+			var cellright=getCell(cube, user.x+user.width, user.y+user.height);
+			if (cellleft.stat=="wall" || cellright.stat=="wall")
 				return true;
 			else return false;
+			cellleft=undefined;
+			cellright=undefined;
 		}
 	}
+	//шаг вправо
 	else if (user.dx>0)
 	{
-		if (cube.door[3]==true)
+		if (user.x+user.width>settings.canvasWidth)
 		{
-			//промежуток
-			if (w>cube.x+cube.width-cube.wallSize && (y<Math.round(cube.height/3)+cube.y || h>Math.round(cube.height/3*2)+cube.y))
-				return true;
-			else if (w>Math.round(cube.width/3*2)+cube.x &&(y<cube.y+cube.wallSize  ||  h>cube.y+cube.height-cube.wallSize))
-				return true;
-			else return false;
+			user.j+=1;
+			user.x=0;
+			user.centerx=0+Math.round(settings.userWidth/2);
+			//console.log("coord: "+user.i, user.j);
 		}
 		else
-		//целиком
 		{
-			if (w>cube.x+cube.width-cube.wallSize)
-				return true;
-			else if (w>Math.round(cube.width/3*2)+cube.x &&(y<cube.y+cube.wallSize  ||  h>cube.y+cube.height-cube.wallSize))
+			//значения для правого верхнего и нижнего угла игрока
+			var cellup=getCell(cube, user.x+user.width, user.y);
+			var celldown=getCell(cube, user.x+user.width, user.y+user.height);
+			if (cellup.stat=="wall" || celldown.stat=="wall")
 				return true;
 			else return false;
+			cellup=undefined;
+			celldown=undefined;
 		}
 	}
 }
 //функция смены местами кубов с одинаковыми дверями
 function swap()
 {	
-	//console.log("swap");
+	user.dx=0;
+	user.dy=0;
 	//функция сравнения содержимого двух одномерных массивов
 	function compareArrays(a, b) 
 	{
@@ -339,11 +326,10 @@ function swap()
 		return false;
 	}
 	//получаем текущий куб, в котором находится игрок
-	var cube=getCube(user.centerx,user.centery);
+	var cube=getCube(user.i,user.j);
 	//рандомом ищем i,j rand = min + Math.random() * (max + 1 - min);
 	var randi=Math.round(1 - 0.5 + Math.random() * (settings.countCubes-2 + 1 - 1));
 	var randj=Math.round(1 - 0.5 + Math.random() * (settings.countCubes-2 + 1 - 1));
-	//console.log("rand:",randi,randj);
 	
 	//временные переменные, хранящие индексы искомого куба
 	var tempi=randi;
@@ -373,7 +359,6 @@ function swap()
 			tempi+=2;
 		else
 			tempi++;
-		//console.log("temp:",tempi,tempj,"user:",cube.i,cube.j);
 		
 		//получаем обьект куба с текущими временными индексами для дальнейшей проверки
 		newCube=map.cubes[tempi][tempj];
@@ -381,7 +366,6 @@ function swap()
 		//если не нашли подходящий куб, то принудительно выходим из цикла
 		if (tempi==randi&&tempj==randj)
 		{
-			console.log("no search");
 			break;
 		}
 		
@@ -389,11 +373,9 @@ function swap()
 		stop++;
 		if (stop>100)
 		{
-			//console.log("error: infinity");
 			break;
 		}
 	}
-	//console.log("last:",tempi,tempj,"cube:",cube.i,cube.j);
 	
 	//если нашли, то в массиве кубов меняем элементы местами
 	if (compareArrays(cube.door, newCube.door)==true)
@@ -402,38 +384,20 @@ function swap()
 		var oldi=cube.i;
 		var oldj=cube.j;
 		
-		//меняем местами цвета стен
-		var swapWallColor = cube.wallColor;
-		cube.wallColor = newCube.wallColor;
-		newCube.wallColor = swapWallColor;
-		
-		//меняем местами цвета кубов
-		var swapColor = cube.color;
-		cube.color = newCube.color;
-		newCube.color = swapColor;
-		
 		//меняем кубы
-		map.cubes[oldi][oldj]=cube;
-		map.cubes[tempi][tempj]=newCube;
-		
-		//console.log("sucsess");
+		map.cubes[tempi][tempj]=cube;
+		map.cubes[oldi][oldj]=newCube;
 		
 		//меняем расположение игрока, чтобы он сохранился в старом кубе
-		var deltax=Math.round(user.x-map.cubes[oldi][oldj].x);
-		var deltay=Math.round(user.y-map.cubes[oldi][oldj].y);
-		
-		user.x=Math.round(map.cubes[tempi][tempj].x+deltax);
-		user.y=Math.round(map.cubes[tempi][tempj].y+deltay);
-		user.centerx=user.width/2+user.x;
-		user.centery=user.height/2+user.y;
+		user.i=tempi;
+		user.j=tempj;
 	}
-	//console.log("end swap");
 }
 //функция, которая перемещает только игрока в новый куб
 function teleportUser()
 {
 	//получаем текущий куб, в котором находится игрок
-	var cube=getCube(user.centerx,user.centery);
+	var cube=getCube(user.i,user.j);
 	
 	//рандомом ищем i,j rand = min + Math.random() * (max + 1 - min);
 	var randi=Math.round(1 - 0.5 + Math.random() * (settings.countCubes-2 + 1 - 1));
@@ -443,11 +407,6 @@ function teleportUser()
 	var newCube=map.cubes[randi][randj];
 	
 	//меняем расположение игрока, чтобы он сохранился в старом кубе
-	var deltax=Math.round(user.x-map.cubes[cube.i][cube.j].x);
-	var deltay=Math.round(user.y-map.cubes[cube.i][cube.j].y);
-		
-	user.x=Math.round(map.cubes[randi][randj].x+deltax);
-	user.y=Math.round(map.cubes[randi][randj].y+deltay);
-	user.centerx=user.width/2+user.x;
-	user.centery=user.height/2+user.y;
+	user.i=randi;
+	user.j=randj;
 }

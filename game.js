@@ -3,11 +3,20 @@ function startGame()
 {
 	start();
 	//создаем кубы
-	createGameCubes();
+	createCubes();
 	//создаем двери
 	createDoors();
-	//создаем стены
-	createWalls();
+	//cоздаем стены
+	for(var i=0;i<settings.countCubes;i++)
+	{
+		for(var j=0;j<settings.countCubes;j++)
+		{
+			createWall();
+		}
+	}
+	//задаем статус старотовому кубу
+	map.cubes[user.i][user.j].stat="start";
+	
 	//рисуем карту
 	drawCube();
 
@@ -16,43 +25,19 @@ function startGame()
 	
 	//задаем интервал для обработки события перемещения через заданное время в настройках
 	interval = setInterval(swapGame,settings.swapInterval);
-}
-//старт - кнопка меню
-function startHardGame()
-{
-	start();
-	//создаем кубы
-	createGameCubes();
-	//создаем двери
-	createDoors();
-	//создаем стены
-	createWalls();
-	//рисуем карту
-	//drawCube();
-	refreshHardGame();
-	//привязка стратегии к ивенту
-	document.addEventListener('keydown', gameHardStrategy);
 	
-	//задаем интервал для обработки события перемещения через заданное время в настройках
-	interval = setInterval(swapHardGame,settings.swapInterval);
+	gameStatus="play"
 }
-
 //функция, необходимая для перемещения куба, в котором находится игрок и отрисовки изменения кадра
 function swapGame()
 {
 	swap();
 	refreshGame();
 }
-//функция, необходимая для перемещения куба, в котором находится игрок и отрисовки изменения кадра
-function swapHardGame()
-{
-	swap();
-	refreshHardGame();
-}
 //функция, которая выполняется после прохождения лабиринта
 function finishGame()
 {
-	document.getElementById('finish').style.display='block';
+	document.getElementById('finish').style.display='flex';
 	clearInterval(interval);
 	clearInterval(timer);
 	
@@ -65,6 +50,8 @@ function finishGame()
 	
 	document.removeEventListener('keydown', gameStrategy);
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	
+	gameStatus="finish";
 }
 //задаем стратегию, методы для основной игры которые будут выполняться при нажатии клавиши
 function gameStrategy()
@@ -72,17 +59,11 @@ function gameStrategy()
 	processKey(event);
 	refreshGame();
 }
-//задаем стратегию, методы для основной игры которые будут выполняться при нажатии клавиши
-function gameHardStrategy()
-{
-	processKey(event);
-	refreshHardGame();
-}
 //обновление кадра в игре
 function refreshGame()
 {
 	// получаем текущий куб, в котором находится игрок для получения информации
-	var cube=getCube(user.centerx,user.centery);
+	var cube=getCube(user.i,user.j);
 	// Обновляем кадр только если значок движется
 	if (user.dx != 0 || user.dy != 0) 
 	{
@@ -109,94 +90,69 @@ function refreshGame()
 		finishGame();
 	}
 }
-
-//обновление кадра в игре
-function refreshHardGame()
+function drawMap(cube)
 {
-	// получаем текущий куб, в котором находится игрок для получения информации
-	var cube=getCube(user.centerx,user.centery);
-	// Обновляем кадр только если значок движется
-	if (user.dx != 0 || user.dy != 0) 
-	{
-		//Проверка столкновения со стенами
-		if (checkCollision(cube)==false) 
-		{
-			user.x += user.dx;
-			user.y += user.dy;
-			user.centerx+=user.dx;
-			user.centery+=user.dy;
-		}
-		else
-		{
-			user.dx=0;
-			user.dy=0;
-		}
-	}
-	//стираем холст
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	//рисуем
-	//рисуем игрока
-	ctx.fillStyle=user.color;
-	ctx.fillRect(user.x,user.y, user.width, user.height);
-	ctx.strokeRect(user.x,user.y, user.width, user.height);
+	canvasMap = document.getElementById('maplist');
+	ctxMap = canvasMap.getContext('2d');
 	
-	//рисуем карту
-	for(var i=0;i<settings.countCubes;i++)
-	{
-		for(var j=0;j<settings.countCubes;j++)
-		{
-			if (map.cubes[i][j].stat=="finish")
-			{
-				//рисуем отметку финиша
-				var finishx=map.cubes[i][j].x+map.cubes[i][j].width/4;
-				var finishy=map.cubes[i][j].y+map.cubes[i][j].height/4;
-				var finishw=map.cubes[i][j].width/2;
-				var finishh=map.cubes[i][j].height/2;
-				ctx.fillStyle="#fff";
-				ctx.fillRect(finishx,finishy, finishw, finishh);
-				ctx.strokeRect(finishx,finishy, finishw, finishh);
-			}
-		}
+	//задаем области рисования и обьекту карты размеры из настроек
+	canvasMap.width=settings.canvasWidth;
+	canvasMap.height=settings.canvasHeight;
+	
+	var cubei=cube.i;
+	var cubej=cube.j;
+	
+	var useri=user.i;
+	var userj=user.j;
+	
+	//рисуем фон
+	pic= new Image();
+    pic.src='../textures/maplist.png';
+    pic.onload = function() 
+	{   
+		//фон
+		ctxMap.drawImage(pic, 0, 0, 1000, 1000, 0, 0, canvasMap.width, canvasMap.height);
+		
+		var w=Math.round(canvas.width/settings.countCubes);
+		var h=Math.round(canvas.height/settings.countCubes);
+		
+		//игрок
+		ctxMap.drawImage(pic, 1000, 200, 200, 200, user.j*w,user.i*h,w,h);
+		
+		//крест
+		ctxMap.drawImage(pic, 1000, 0, 200, 200, cube.j*w,cube.i*h,w,h);
 	}
 	
-	if (cube.stat=="finish")
-	{
-		finishGame();
-	}
+	//отвязка игровых кнопок
+	document.removeEventListener('keydown', gameStrategy);
+	
+	//привязка нужных
+	document.addEventListener('keydown', mapKey);
+	
+	//отображаем карту
+	document.getElementById('maplist').style.display='block';
 }
 //отрисовка отдельного куба
 function drawCube()
 {
-	var cube=getCube(user.centerx,user.centery);
-
-	ctx.fillStyle=cube.color;
-	ctx.fillRect(cube.x, cube.y,cube.width,cube.height);
-	for (var s=0; s<cube.wall.length; s++)
+	var cube=getCube(user.i,user.j);
+	for (var i=0; i<cube.cell.length; i++)
 	{
-		//рисуем стены
-		ctx.fillStyle=cube.wallColor;
-		ctx.fillRect(cube.wall[s].x,cube.wall[s].y,cube.wall[s].width,cube.wall[s].height);
+		for (var j=0; j<cube.cell.length; j++)
+		{
+			ctx.fillStyle=cube.cell[i][j].color;
+			ctx.fillRect(cube.cell[i][j].x,cube.cell[i][j].y,cube.cell[i][j].width,cube.cell[i][j].height);
+			if (cube.cell[i][j].stat=="normal")
+			{
+				ctx.strokeStyle="black";
+				ctx.strokeRect(cube.cell[i][j].x,cube.cell[i][j].y,cube.cell[i][j].width,cube.cell[i][j].height);
+			}
+			//рисуем стены
+		}
 	}
 
 	//рисуем игрока
 	ctx.fillStyle=user.color;
 	ctx.fillRect(user.x,user.y, user.width, user.height);
 	ctx.strokeRect(user.x,user.y, user.width, user.height);
-	
-	//рисуем отметку финиша
-	if (cube.stat=="finish")
-	{
-		var finishx=cube.x+cube.width/4;
-		var finishy=cube.y+cube.height/4;
-		var finishw=cube.width/2;
-		var finishh=cube.height/2;
-		ctx.fillStyle="#fff";
-		ctx.fillRect(finishx,finishy, finishw, finishh);
-		ctx.strokeRect(finishx,finishy, finishw, finishh);
-	}
 }
-
-
-
-
-
