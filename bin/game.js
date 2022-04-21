@@ -1,9 +1,9 @@
 //старт - кнопка меню
 function startGame()
 {
-	start(); 
+	start();
 	//создаем кубы
-	createCubes();
+	createCubes(); 
 	//создаем двери
 	createDoors();
 	//cоздаем стены
@@ -105,23 +105,17 @@ function drawMap(cube)
 	var useri=user.i;
 	var userj=user.j;
 	
-	//рисуем фон
-	//pic= new Image();
-    //pic.src='../textures/maplist.png';
-    //pic.onload = function() 
-	//{   
-		//фон
-		ctxMap.drawImage(mapTexture, 0, 0, 1000, 1000, 0, 0, canvasMap.width, canvasMap.height);
+	//фон
+	ctxMap.drawImage(mapTexture, 0, 0, 1000, 1000, 0, 0, canvasMap.width, canvasMap.height);
 		
-		var w=Math.round(canvas.width/settings.countCubes);
-		var h=Math.round(canvas.height/settings.countCubes);
+	var w=Math.round(canvas.width/settings.countCubes);
+	var h=Math.round(canvas.height/settings.countCubes);
 		
-		//игрок
-		ctxMap.drawImage(mapTexture, 1000, 200, 200, 200, user.j*w,user.i*h,w,h);
+	//игрок
+	ctxMap.drawImage(mapTexture, 1000, 200, 200, 200, user.j*w,user.i*h,w,h);
 		
-		//крест
-		ctxMap.drawImage(mapTexture, 1000, 0, 200, 200, cube.j*w,cube.i*h,w,h);
-	//}
+	//крест
+	ctxMap.drawImage(mapTexture, 1000, 0, 200, 200, cube.j*w,cube.i*h,w,h);
 	
 	//отвязка игровых кнопок
 	document.removeEventListener('keydown', gameStrategy);
