@@ -1,7 +1,7 @@
 //старт - кнопка меню
 function startGame()
 {
-	start();
+	start(); 
 	//создаем кубы
 	createCubes();
 	//создаем двери
