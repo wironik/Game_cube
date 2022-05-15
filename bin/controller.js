@@ -1,9 +1,7 @@
 // Обработка нажатия кнопок
 function processKey() 
 {
-	
 	//блокируем нажатие клавиш по умолчанию (сами будем задавать нужное)
-	//e.preventDefault();
 	if (gameStatus=="play")
 	{
 		let refreshed = false;
@@ -36,7 +34,7 @@ function processKey()
 		if (keyStatus[9])//tab
 		{
 			refreshed = true;
-			openMap();
+			toggleMap();
 			keyStatus[9]=null;
 		}
 		if (keyStatus[27])//esc
@@ -45,16 +43,16 @@ function processKey()
 		//мое
 		if (keyStatus[120])//f9 финиш отладка
 			finishGame();
+		
 		if (refreshed==true)
 		{
 			refreshGame();
 		}
-		
 	}
 	if (gameStatus=="map")
 	{
 		if (keyStatus[27] || keyStatus[9])//esc, tab
-		closeMap();
+		toggleMap();
 		keyStatus[9]=null;
 	}
 	
@@ -64,7 +62,3 @@ function processKey()
 	
 	setTimeout(processKey, 50);
 }
-
-//!проблема1: каждые 100мс функция делает проверки, такое не надо. 
-//!проблема2: при нажатии таб кнопка два раза срабатывает (открытие и закрытие соответственно, изза проблемы1)
-//!проблема3: данные остаются в массиве 

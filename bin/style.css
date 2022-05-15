@@ -26,7 +26,7 @@
 .gamepad
 {
 	position:fixed;
-	display:block;
+	display:none;
 	width:200px;
 	height:200px;
 	right:0;
@@ -101,6 +101,13 @@
 	.title
 	{
 		font-size:24px;
+	}
+}
+@media(max-width:900px)
+{
+	.gamepad
+	{
+		display:block;
 	}
 }
 .menu-btn

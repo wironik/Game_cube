@@ -52,7 +52,6 @@ function visualTime(id) //ОК
         }
     }
 }
-
 //обработка функции нажатия на пробел - принудительное перемещение куба
 function teleport()
 {
@@ -76,20 +75,18 @@ function getFinish()
 		}
 	}
 }
-
+//открытие и закрытие карты
 function toggleMap()
 {
 	if (gameStatus=="map")
 	{
-		closeMap();
+		//скрываем карту
+		document.getElementById('maplist').style.display='none';
+	
+		gameStatus="play";
+		console.log("closemap");
 		return;
 	}
-	openMap();
-}
-
-//обработка функции нажатия на таб - показать всю карту на некоторое время, работает один раз
-function openMap()
-{
 	if (eyes==undefined)
 	{
 		drawMap(getFinish());
@@ -98,32 +95,7 @@ function openMap()
 		gameStatus="map";
 		console.log("openmap");
 	}
-	//let btn = document.getElementById("tab-btn");
-	
-	//отвязка игровых кнопок
-	//document.removeEventListener('keydown', gameStrategy);
-	
-	//привязка нужных
-	//document.addEventListener('keydown', mapKey);
-	
-	
 }
-
-function closeMap()
-{
-	//отвязка игровых кнопок
-	//document.removeEventListener('keydown', mapKey);
-	
-	//привязка нужных
-	//document.addEventListener('keydown', gameStrategy);
-	
-	//скрываем карту
-	document.getElementById('maplist').style.display='none';
-	
-	gameStatus="play";
-	console.log("closemap");
-}
-
 //отображение окна
 function displayed(id)
 {
@@ -153,6 +125,7 @@ function menu()
 //поиск куба, в котором находится игрок
 function getCube(i,j)
 {
+	//console.log(i,j);
 	return map.cubes[i][j];
 }
 
@@ -170,17 +143,16 @@ function getCell(cube, x,y)
 				
 			if((minx<=x) && (x<=maxx)&& (miny<=y)&& (y<=maxy) )
 			{
+				console.log(i,j);
 				return cube.cell[i][j];
 				break;
 			}
 		}
 	}
 }
-
 //проверка столкновений (передаем клетку, на которой стоит игрок!)
 function checkCollision(cube)
 {	
-	//!!! добавить изменение dx , чтобы примыкать к стене вплотную, если столкновение true
 	//предполагаемые координаты, если бы совершили шаг
 	var x=user.x+user.dx;
 	var y=user.y+user.dy;

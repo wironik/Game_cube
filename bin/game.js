@@ -76,13 +76,6 @@ function finishGame()
 	
 	gameStatus="finish";
 }
-//задаем стратегию, методы для основной игры которые будут выполняться при нажатии клавиши
-//function gameStrategy()
-//{
-//	processKey(event);
-//	refreshGame();
-//}
-//обновление кадра в игре
 function refreshGame()
 {
 	console.log("refresh");
