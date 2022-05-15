@@ -1,28 +1,5 @@
-//функция, задающая глобальным переменным параметры
-function start()
-{
-	//берем данные из html содержимого
-	canvas = document.getElementById('canvas');
-	ctx = canvas.getContext('2d');
-	
-	//задаем области рисования и обьекту карты размеры из настроек
-	canvas.width=settings.canvasWidth;
-	canvas.height=settings.canvasHeight;
-	
-	//задаем индексы расположения игрока
-	user.i=Math.floor(settings.countCubes/2);
-	user.j=Math.floor(settings.countCubes/2);
-	
-	timer = setInterval(updateTime, 1000);
-	
-	eyes=undefined;
-	swapped=undefined;
-	
-	//скрываем окно
-	document.getElementById('menu').style.display='none';
-}
 //счетчик времени
-function updateTime()
+function updateTime() //ОК
 {
     sec++;
     if (sec >= 60) 
@@ -38,7 +15,7 @@ function updateTime()
     visualTime('time');
 }
 //отображение времени на любом из элементов html в формате hh:mm:ss
-function visualTime(id)
+function visualTime(id) //ОК
 {
 	if (sec < 10) 
 	{ 
@@ -75,42 +52,7 @@ function visualTime(id)
         }
     }
 }
-// Обработка нажатия кнопок
-function processKey(e) 
-{
-	//console.log(e.keyCode);
-	//блокируем нажатие клавиш по умолчанию (сами будем задавать нужное)
-	e.preventDefault();
-	user.dx = 0;
-	user.dy = 0;
-	if (e.keyCode == 87 || e.keyCode ==38) //вверх
-		user.dy = -1*user.speed;
-	if (e.keyCode == 83 || e.keyCode ==40) //вниз
-		user.dy = user.speed;
-	if (e.keyCode == 65 || e.keyCode ==37) //влево
-		user.dx = -1*user.speed;
-	if (e.keyCode == 68 || e.keyCode ==39) //вправо
-		user.dx = user.speed;
-	if (e.keyCode == 32)//пробел
-		teleport();
-	if (e.keyCode == 9)//tab
-		openMap();
-	if (e.keyCode == 112)//f1
-		displayed('help');
-	if (e.keyCode == 27)//esc
-		menu();
-	if (e.keyCode == 120)//f9 финиш отладка
-		finishGame();
-}
 
-function mapKey(e)
-{
-	e.preventDefault();
-	if (e.keyCode == 27)//esc
-		closeMap();
-	if (e.keyCode == 9)//tab
-		closeMap();
-}
 //обработка функции нажатия на пробел - принудительное перемещение куба
 function teleport()
 {
@@ -134,6 +76,17 @@ function getFinish()
 		}
 	}
 }
+
+function toggleMap()
+{
+	if (gameStatus=="map")
+	{
+		closeMap();
+		return;
+	}
+	openMap();
+}
+
 //обработка функции нажатия на таб - показать всю карту на некоторое время, работает один раз
 function openMap()
 {
@@ -141,26 +94,43 @@ function openMap()
 	{
 		drawMap(getFinish());
 		eyes=setTimeout(function(){eyes=undefined;}, settings.mapTime);
+		
+		gameStatus="map";
+		console.log("openmap");
 	}
+	//let btn = document.getElementById("tab-btn");
+	
+	//отвязка игровых кнопок
+	//document.removeEventListener('keydown', gameStrategy);
+	
+	//привязка нужных
+	//document.addEventListener('keydown', mapKey);
+	
+	
 }
+
 function closeMap()
 {
 	//отвязка игровых кнопок
-	document.removeEventListener('keydown', mapKey);
+	//document.removeEventListener('keydown', mapKey);
 	
 	//привязка нужных
-	document.addEventListener('keydown', gameStrategy);
+	//document.addEventListener('keydown', gameStrategy);
 	
 	//скрываем карту
 	document.getElementById('maplist').style.display='none';
+	
+	gameStatus="play";
+	console.log("closemap");
 }
-//отображение окна подсказки
+
+//отображение окна
 function displayed(id)
 {
 	if (document.getElementById(id).style.display=='flex')
 	{
 		document.getElementById(id).style.display='none';
-		if (gameStatus=="stop")
+		if (gameStatus=="start")
 		document.getElementById('menu').style.display='flex';
 		if (gameStatus=="finish")
 		document.getElementById('finish').style.display='flex';
@@ -168,7 +138,7 @@ function displayed(id)
 	else
 	{
 		document.getElementById(id).style.display='flex';
-		if (gameStatus=="stop")
+		if (gameStatus=="start")
 		document.getElementById('menu').style.display='none';
 		if (gameStatus=="finish")
 		document.getElementById('finish').style.display='none';

@@ -1,7 +1,23 @@
 //старт - кнопка меню
 function startGame()
 {
-	start();
+	//берем данные из html содержимого
+	canvas = document.getElementById('canvas');
+	ctx = canvas.getContext('2d');
+	
+	//задаем области рисования и обьекту карты размеры из настроек
+	canvas.width=settings.canvasWidth;
+	canvas.height=settings.canvasHeight;
+	
+	//задаем индексы расположения игрока
+	user.i=Math.floor(settings.countCubes/2);
+	user.j=Math.floor(settings.countCubes/2);
+	
+	timer = setInterval(updateTime, 1000);
+	
+	eyes=undefined;
+	swapped=undefined;
+	
 	//создаем кубы
 	createCubes(); 
 	//создаем двери
@@ -20,13 +36,21 @@ function startGame()
 	//рисуем карту
 	drawCube();
 
-	//привязка стратегии к ивенту
-	document.addEventListener('keydown', gameStrategy);
+	//привязка кнопок
+	document.addEventListener('keydown', function(e){e.preventDefault(); keyStatus[e.keyCode || e.which] = true; },true);
+	document.addEventListener('keyup', function(e){e.preventDefault(); keyStatus[e.keyCode || e.which] = false; },true);
+	
+	//активация кнопок
+	processKey();
 	
 	//задаем интервал для обработки события перемещения через заданное время в настройках
 	interval = setInterval(swapGame,settings.swapInterval);
 	
-	gameStatus="play"
+	//скрываем окно
+	document.getElementById('menu').style.display='none';
+	gameStatus="play";
+	
+	console.log("start");
 }
 //функция, необходимая для перемещения куба, в котором находится игрок и отрисовки изменения кадра
 function swapGame()
@@ -41,27 +65,27 @@ function finishGame()
 	clearInterval(interval);
 	clearInterval(timer);
 	
-	document.getElementById('time').innerHTML ='Время: 00:00:00';
 	visualTime('finishTime');
 	
 	sec=0;
 	min=0;
 	hour=0;
 	
-	document.removeEventListener('keydown', gameStrategy);
+	//document.removeEventListener('keydown', gameStrategy);
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	
 	gameStatus="finish";
 }
 //задаем стратегию, методы для основной игры которые будут выполняться при нажатии клавиши
-function gameStrategy()
-{
-	processKey(event);
-	refreshGame();
-}
+//function gameStrategy()
+//{
+//	processKey(event);
+//	refreshGame();
+//}
 //обновление кадра в игре
 function refreshGame()
 {
+	console.log("refresh");
 	// получаем текущий куб, в котором находится игрок для получения информации
 	var cube=getCube(user.i,user.j);
 	// Обновляем кадр только если значок движется
@@ -75,12 +99,9 @@ function refreshGame()
 			user.centerx+=user.dx;
 			user.centery+=user.dy;
 		}
-		else
-		{
-			user.dx=0;
-			user.dy=0;
-		}
 	}
+	user.dx=0;
+	user.dy=0;
 	//стираем холст
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	//рисуем
@@ -116,12 +137,6 @@ function drawMap(cube)
 		
 	//крест
 	ctxMap.drawImage(mapTexture, 1000, 0, 200, 200, cube.j*w,cube.i*h,w,h);
-	
-	//отвязка игровых кнопок
-	document.removeEventListener('keydown', gameStrategy);
-	
-	//привязка нужных
-	document.addEventListener('keydown', mapKey);
 	
 	//отображаем карту
 	document.getElementById('maplist').style.display='block';

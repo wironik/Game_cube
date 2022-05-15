@@ -1,15 +1,17 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>Cube game v1.4</title>
+		<title>Cube game build</title>
 	
 		<!-- ссылка на стиль-->
 		<link rel="stylesheet" type="text/css" href="style.css"></link>
 		<!-- ссылка на скрипт-->
 		<script type="text/javascript" src="start.js"></script>
+		<script type="text/javascript" src="controller.js"></script>
 		<script type="text/javascript" src="process.js"></script>
 		<script type="text/javascript" src="generate.js"></script>
 		<script type="text/javascript" src="game.js"></script>
+		<script type="text/javascript" src="localdatabase.js"></script>
 		<!--<script type="text/javascript" src="script.js"></script>-->
 
 	</head>
@@ -22,6 +24,7 @@
 		<div class="timer">
 			<p id="time">Время: 00:00:00</p>
 		</div>
+		
 		<!-- игровое поле -->
 		<div class="game">
 			<!-- поле игры -->
@@ -30,6 +33,18 @@
 			<!-- игровая карта -->
 			<canvas class="maplist" id="maplist">
 			</canvas>
+		</div>
+		
+		<div id="gamepad" class="gamepad">
+			<input id="f1-btn" class="gamepad-btn" type="button" value="F1" onclick="displayed('help')" ></input>
+			<input id="up-btn" class="gamepad-btn" type="button" value="▲" onclick="up()" ></input>
+			<input id="esc-btn" class="gamepad-btn" type="button" value="ESC" onclick="menu()" ></input>
+			<input id="left-btn" class="gamepad-btn" type="button" value="◄" onclick="startGame()" ></input>
+			<input id="tp-btn" class="gamepad-btn" type="button" value="■" onclick="teleport()" ></input>
+			<input id="right-btn" class="gamepad-btn" type="button" value="►" onclick="startGame()" ></input>
+			<input id="tab-btn" class="gamepad-btn" type="button" value="TAB" onclick="toggleMap()" ></input>
+			<input id="down-btn" class="gamepad-btn" type="button" value="▼" onclick="startGame()" ></input>
+			<input id="none-btn" class="gamepad-btn" type="button" value="-" ></input>
 		</div>
 		
 		<!--всплывающее меню-->
@@ -68,6 +83,9 @@
 				<p class="text">SPACE - телепорт в случайную комнату</p>
 				<p class="text">TAB - отобразить карту</p>
 				<input type="button" class="menu-btn" value="Закрыть" onclick="displayed('controls')" ></input>
+			</div>
 		</div>
+		
+		
 	</body>
 </html>

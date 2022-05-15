@@ -11,7 +11,8 @@ var ctx;
 
 //события
 var interval;
-var gameStatus="stop"
+var gameStatus="start"
+var keyStatus = {};
 
 //таймер
 var timer;

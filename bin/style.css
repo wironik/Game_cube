@@ -23,6 +23,23 @@
 	font-size:24px;
 	word-break:break-all;
 }
+.gamepad
+{
+	position:fixed;
+	display:block;
+	width:200px;
+	height:200px;
+	right:0;
+	bottom:0;
+}
+.gamepad-btn
+{
+	font-family:DPix_8pt;
+	width:50px;
+	height:50px;
+	margin-bottom:10px;
+	padding:0;
+}
 .game canvas
 {
 	margin-left:25%;
